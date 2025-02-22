@@ -4,9 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
-import com.google.gson.Gson;
 import com.razorpay.Checkout;
 import com.razorpay.CheckoutActivity;
 import com.razorpay.ExternalWalletListener;
@@ -43,14 +40,9 @@ public class RazorpayDelegate implements ActivityResultListener, ExternalWalletL
     private static final int INCOMPATIBLE_PLUGIN = 3;
     private static final int UNKNOWN_ERROR = 100;
     private String packageName;
-    private Checkout checkout;
-    Gson gson ;
-    private UpiTurbo upiTurbo;
 
     public RazorpayDelegate(Activity activity) {
         this.activity = activity;
-        upiTurbo = new UpiTurbo(activity);
-        this.gson = new Gson();
     }
 
     void setPackageName(String packageName){
@@ -60,13 +52,11 @@ public class RazorpayDelegate implements ActivityResultListener, ExternalWalletL
     void openCheckout(Map<String, Object> arguments, Result result) {
 
         this.pendingResult = result;
-
         JSONObject options = new JSONObject(arguments);
         if (activity.getPackageName().equalsIgnoreCase(packageName)){
             Intent intent = new Intent(activity, CheckoutActivity.class);
             intent.putExtra("OPTIONS", options.toString());
             intent.putExtra("FRAMEWORK", "flutter");
-
             activity.startActivityForResult(intent, Checkout.RZP_REQUEST_CODE);
         }
 
@@ -182,23 +172,6 @@ public class RazorpayDelegate implements ActivityResultListener, ExternalWalletL
         reply.put("data", data);
 
         sendReply(reply);
-    }
-
-    public void setKeyID(String keyId,  Result result){
-        upiTurbo.setKeyID(keyId, result);
-    }
-
-    public void linkNewUpiAccount(String customerMobile, String color, Result result){
-        upiTurbo.linkNewUpiAccount(customerMobile, color, result);
-    }
-
-
-    public void manageUpiAccounts(String customerMobile, String color, Result result){
-        upiTurbo.manageUpiAccounts(customerMobile, color, result);
-    }
-
-    public  boolean isTurboPluginAvailable(Result result) {
-        return upiTurbo.isTurboPluginAvailable(result);
     }
 
 }
