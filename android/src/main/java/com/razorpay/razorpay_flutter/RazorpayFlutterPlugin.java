@@ -33,11 +33,6 @@ public class RazorpayFlutterPlugin implements FlutterPlugin, MethodCallHandler, 
     /**
      * Plugin registration for Flutter version < 1.12
      */
-    public static void registerWith(Registrar registrar) {
-        final MethodChannel channel = new MethodChannel(registrar.messenger(), CHANNEL_NAME);
-        channel.setMethodCallHandler(new RazorpayFlutterPlugin(registrar));
-    }
-
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
         channel = new MethodChannel(binding.getBinaryMessenger(), CHANNEL_NAME);
@@ -50,17 +45,6 @@ public class RazorpayFlutterPlugin implements FlutterPlugin, MethodCallHandler, 
             channel.setMethodCallHandler(null);
             channel = null;
         }
-    }
-
-
-    /**
-     * Constructor for Flutter version < 1.12
-     * @param registrar
-     */
-    private RazorpayFlutterPlugin(Registrar registrar) {
-        this.razorpayDelegate = new RazorpayDelegate(registrar.activity());
-        this.razorpayDelegate.setPackageName(registrar.activity().getPackageName());
-        registrar.addActivityResultListener(razorpayDelegate);
     }
 
     @Override
